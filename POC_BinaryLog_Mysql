@@ -1,0 +1,29 @@
+Why we need Binary Logs?
+The binary logs contain information about the data changes that occurred on the MySQL instance. The binary logs contain all SQL statements, which update the data (INSERT, UPDATE DELETE) and the DDL statements (Create database object, drop database objects, truncate table) within the database. It contains the time taken to execute a statement that creates and updates the data. The SQL statement that is used to update the data are stored in the EVENT form. The EVENTs describe the global changes that occurred on the MySQL Server during any operations. It helps us to reproduce the change of the global state that had happened on the MySQL Server.
+
+Benifits:
+1)For replication, the binary log on a replication source server provides a record of the data changes to be sent to replicas. The source sends the information contained in its binary log to its replicas, which reproduce those transactions to make the same data changes that were made on the source.
+2)Certain data recovery operations require use of the binary log. After a backup has been restored, the events in the binary log that were recorded after the backup was made are re-executed. These events bring databases up to date from the point of the backup
+
+-binary log files and relay log files can be encrypted, helping to protect these files and the potentially sensitive data contained in them from being misused by outside attackers, and also from unauthorized viewing by users of the operating system where they are stored. You enable encryption on a MySQL server by setting the binlog_encryption system variable to ON.
+-To keep track of which binary log files have been used, mysqld also creates a binary log index file that contains the names of the binary log files. By default, this has the same base name as the binary log file, with the extension '.index'. You can change the name of the binary log index file with the --log-bin-index[=file_name] option. You should not manually edit this file while mysqld is running; doing so would confuse mysqld.
+
+Steps:
+1)let us check metadata table namedinformation_schema.global_variables.
+mysql> select * from information_schema.global_variables;
+mysql> show global variables like ‘log_bin’;
+
+2)To enable binary logging, copy and paste the following line in the my.ini configuration file.
+log-bin=”[HostName]-bin”
+
+To disable binary logging, you can specify the --skip-log-bin or --disable-log-bin option at startup. If either of these options is specified and --log-bin is also specified, the option specified later takes precedence.
+
+3)To view the default location of the binary location
+
+mysql> show global variables like ‘%log_bin%’;
+To view the list of the binary logs,
+mysql> show binary logs;
+
+4)To change binary log path, go to my.ini file. Then change,
+Existing value: log-bin=”<username>-bin”
+New Value: log-bin=” D:\Binarylogs\<username>-bin”
